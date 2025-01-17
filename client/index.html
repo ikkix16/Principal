@@ -8,7 +8,6 @@
         html {
             margin: 0;
             height: 100%;
-
         }
 
         body {
@@ -45,6 +44,10 @@
             outline: none;
         }
 
+        button>* {
+            pointer-events: none;
+        }
+
         #messages {
             list-style-type: none;
             margin: 0;
@@ -62,6 +65,8 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha1/css/bootstrap.min.css"
         rel="nofollow" integrity="sha384-r4NyP46KrjDleawBgD5tp8Y7UzmLA05oM1iAEQ17CSuDqnUK2+k9luXQOfXJCJ4I"
         crossorigin="anonymous">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.10.0/font/bootstrap-icons.min.css"
+        rel="stylesheet">
 </head>
 
 <body class="container">
@@ -80,7 +85,24 @@
         </div>
         <div class="card footer">
             <h6 class="card-header">
-                <label for="formFile" class="form-label mt-2">Select a file</label>
+                <div class="row">
+                    <div class="col-sm-8">
+                        <label for="formFile" class="form-label mt-2">Select a file</label>
+                    </div>
+                    <div class="col-sm">
+                        <div class="btn-group btn-group-sm" id="videoOption">
+                            <button value="play" type="button" class="btn btn-outline-secondary">
+                                <i class="bi bi-play-circle"></i>
+                            </button>
+                            <button value="pause" type="button" class="btn btn-outline-secondary">
+                                <i class="bi bi-pause-circle"></i>
+                            </button>
+                            <button value="restart" type="button" class="btn btn-outline-secondary">
+                                <i class="bi bi-rewind-circle"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
             </h6>
             <div class="card-body">
                 <form id="form" action="">
@@ -109,6 +131,7 @@
 
 
     const form = document.getElementById('form');
+    const videoOption = document.getElementById("videoOption")
     var input = document.querySelector('input[type=file]');
 
     const img = document.getElementById('img');
@@ -132,11 +155,14 @@
     function displayVideo() {
         img.style.display = "none";
         video.style.display = "flex";
-
         let blobURL = URL.createObjectURL(input.files[0]);
         video.setAttribute("src", blobURL)
 
     }
+    videoOption.addEventListener("click", (e) => {
+        console.log(e.target.value);
+        socket.emit('message', e.target.value);
+    })
 
     form.addEventListener('submit', (e) => {
         e.preventDefault();
